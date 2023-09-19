@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>45-MIN-TIMER</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      text-align: center;
+      margin-top: 100px;
+    }
+
+    .timer {
+      font-size: 500px;
+      color: #333;
+    }
+
+    .workout-time, .break-time {
+      font-size: 24px;
+      color: #333;
+    }
+
+    .total-timer {
+      font-size: 24px;
+      color: #333;
+    }
+
+    .start-button, .stop-button {
+      font-size: 100px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin-top: 20px;
+      margin-right: 50px;
+      cursor: pointer;
+      border-radius: 15px;
+      box-shadow: #4CAF50;
+
+    }
+
+    .stop-button {
+      background-color: #FF5733;
+    }
+    .toggleTimer1{
+     font-size: 30px;
+     background-color: lightcoral;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin-top: 20px;
+      margin-right: 100px;
+      cursor: pointer;
+      border-radius: 50px;
+      
+    }
+    .toggleTimer2{
+        font-size: 30px;
+    margin-right: 0px;
+     background-color:lightcoral;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin-top: 20px;
+      margin-right: 50px;
+      cursor: pointer;
+      border-radius: 50px;
+    }
+  </style>
+</head>
+<body>
+  <div id="timer1">
+    <div class="timer">45:00</div>
+    <div class="workout-time">Workout Time: 50 sec</div>
+    <div class="break-time">Break Time: 10 sec</div>
+    <div class="total-timer">Total Timer: 45:00</div>
+    <button class="start-button">Start</button>
+    <button class="stop-button">Stop</button>
+  </div>
+
+  <div id="timer2" style="display: none;">
+    <div class="timer">50</div>
+    <button class="start-button">Start</button>
+    <button class="stop-button">Stop</button>
+  </div>
+
+  <button id="toggleTimer1" class="toggleTimer1">Timer 1</button>
+  <button id="toggleTimer2" class="toggleTimer2">Timer 2</button>
+
+  <script>
+    var totalDuration1 = 45 * 60; // 45 minutes in seconds
+    var countdown1 = totalDuration1;
+    var workoutTime1 = 50;
+    var breakTime1 = 10;
+    var isWorkoutTime1 = true;
+    var timerInterval1;
+
+    var totalDuration2 = 50;
+    var countdown2 = totalDuration2;
+    var isWorkoutTime2 = true;
+    var timerInterval2;
+
+    function updateTimerDisplay1() {
+      var minutes = Math.floor(countdown1 / 60);
+      var seconds = countdown1 % 60;
+      var totalMinutes = Math.floor(totalDuration1 / 60);
+      var totalSeconds = totalDuration1 % 60;
+
+      var timerDisplay = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      var totalTimerDisplay = `${totalMinutes.toString().padStart(2, '0')}:${totalSeconds.toString().padStart(2, '0')}`;
+
+      document.querySelector('#timer1 .timer').textContent = timerDisplay;
+      document.querySelector('#timer1 .total-timer').textContent = `Total Timer: ${totalTimerDisplay}`;
+
+      if (isWorkoutTime1) {
+        document.querySelector('#timer1 .workout-time').style.display = 'block';
+        document.querySelector('#timer1 .break-time').style.display = 'none';
+      } else {
+        document.querySelector('#timer1 .workout-time').style.display = 'none';
+        document.querySelector('#timer1 .break-time').style.display = 'block';
+      }
+    }
+
+    function startTimer1() {
+      timerInterval1 = setInterval(function() {
+        if (countdown1 <= 0) {
+          isWorkoutTime1 = !isWorkoutTime1;
+          countdown1 = isWorkoutTime1 ? workoutTime1 : breakTime1;
+        }
+        updateTimerDisplay1();
+        countdown1--;
+      }, 1000);
+
+      document.querySelector('#timer1 .start-button').disabled = true;
+      document.querySelector('#timer1 .stop-button').disabled = false;
+    }
+
+    function stopTimer1() {
+      clearInterval(timerInterval1);
+      document.querySelector('#timer1 .start-button').disabled = false;
+      document.querySelector('#timer1 .stop-button').disabled = true;
+    }
+
+    document.querySelector('#timer1 .start-button').addEventListener('click', function() {
+      startTimer1();
+    });
+
+    document.querySelector('#timer1 .stop-button').addEventListener('click', function() {
+      stopTimer1();
+    });
+
+    function updateTimerDisplay2() {
+      document.querySelector('#timer2 .timer').textContent = countdown2;
+    }
+
+    function startTimer2() {
+      timerInterval2 = setInterval(function() {
+        if (countdown2 <= 0) {
+          isWorkoutTime2 = !isWorkoutTime2;
+          countdown2 = isWorkoutTime2 ? 50 : 10;
+        }
+        updateTimerDisplay2();
+        countdown2--;
+      }, 1000);
+
+      document.querySelector('#timer2 .start-button').disabled = true;
+      document.querySelector('#timer2 .stop-button').disabled = false;
+    }
+
+    function stopTimer2() {
+      clearInterval(timerInterval2);
+      document.querySelector('#timer2 .start-button').disabled = false;
+      document.querySelector('#timer2 .stop-button').disabled = true;
+    }
+
+    document.querySelector('#timer2 .start-button').addEventListener('click', function() {
+      startTimer2();
+    });
+
+    document.querySelector('#timer2 .stop-button').addEventListener('click', function() {
+      stopTimer2();
+    });
+
+    // Toggle between timers
+    document.querySelector('#toggleTimer1').addEventListener('click', function() {
+      document.querySelector('#timer1').style.display = 'block';
+      document.querySelector('#timer2').style.display = 'none';
+    });
+
+    document.querySelector('#toggleTimer2').addEventListener('click', function() {
+      document.querySelector('#timer1').style.display = 'none';
+      document.querySelector('#timer2').style.display = 'block';
+    });
+
+    updateTimerDisplay1();
+    updateTimerDisplay2();
+  </script>
+</body>
+</html>
